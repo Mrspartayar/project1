@@ -23,7 +23,7 @@ public class BooksController {
 
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("book", bookDAO.index());
+        model.addAttribute("books", bookDAO.index());
         return "books/index";
     }
 
@@ -47,7 +47,7 @@ public class BooksController {
         return "redirect:/books";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("book", bookDAO.show(id));
         return "books/edit";
