@@ -1,27 +1,32 @@
 package yar.lavr.models;
 
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.util.List;
 
-/**
- * @author Neil Alishev
- */
+@Entity
+@Table(name = "Person")
 public class Person {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-   @NotEmpty
-    @Min(value = 2, message = "The name must be more than two characters")
+    @NotEmpty
+    @Column(name = "name")
     private String name;
 
-    @NotNull
+    @Column(name = "year_of_birth")
     private int yearOfBirth;
 
-    public Person() {
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
 
-    }
+    public Person() {}
 
-    public Person(int id, String name, int yearOfBirth) {
-        this.id = id;
+    public Person(String name, int yearOfBirth) {
         this.name = name;
         this.yearOfBirth = yearOfBirth;
     }
@@ -48,5 +53,13 @@ public class Person {
 
     public void setYearOfBirth(int yearOfBirth) {
         this.yearOfBirth = yearOfBirth;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }
