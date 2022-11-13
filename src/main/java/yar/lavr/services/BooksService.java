@@ -1,6 +1,8 @@
 package yar.lavr.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yar.lavr.models.Book;
@@ -8,6 +10,7 @@ import yar.lavr.models.Person;
 import yar.lavr.repositories.BooksRepository;
 import yar.lavr.repositories.PeopleRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +26,18 @@ public class BooksService {
         this.booksRepository = booksRepository;
     }
 
-    public List<Book> findAll() {
-        return booksRepository.findAll();
+    public List<Book> findAll(boolean sortByYear) {
+        if (sortByYear)
+            return booksRepository.findAll(Sort.by("yearOfPublic"));
+        else
+            return booksRepository.findAll();
+    }
+
+    public List<Book> findWithPagination(Integer page, Integer booksPerPage, boolean sortByYear) {
+        if (sortByYear)
+            return booksRepository.findAll(PageRequest.of(page, booksPerPage, Sort.by("year"))).getContent();
+        else
+            return booksRepository.findAll(PageRequest.of(page, booksPerPage)).getContent();
     }
 
     public Book findOne(int id) {
@@ -32,10 +45,9 @@ public class BooksService {
         return foundBook.orElse(null);
     }
 
-//    public List<Book> findByTitle(String title) {
-//        Book foundBook = booksRepository.findByTitle(title);
-//        return foundBook;
-//    }
+    public List<Book> searchByTitle(String query) {
+        return booksRepository.findByTitleStartingWith(query);
+    }
 
     @Transactional
     public void save(Book book) {
@@ -63,12 +75,19 @@ public class BooksService {
     @Transactional
     public void release(int id) {
         booksRepository.findById(id).ifPresent(
-                book -> book.setOwner(null));
+                book -> {
+                    book.setOwner(null);
+                    book.setTakenAt(null);
+                });
     }
 
     @Transactional
     public void assign(int id, Person selectedPerson) {
         booksRepository.findById(id).ifPresent(
-                book -> book.setOwner(selectedPerson));
+                book -> {
+                    book.setOwner(selectedPerson);
+                    book.setTakenAt(new Date());
+                }
+        );
     }
 }

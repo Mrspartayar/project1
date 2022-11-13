@@ -10,6 +10,7 @@ import yar.lavr.repositories.BooksRepository;
 import yar.lavr.repositories.PeopleRepository;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +44,6 @@ public class PeopleService {
         updatedPerson.setId(id);
         peopleRepository.save(updatedPerson);
     }
-
     @Transactional
     public void delete(int id) {
         peopleRepository.deleteById(id);
@@ -57,6 +57,12 @@ public class PeopleService {
         Optional<Person> person = peopleRepository.findById(id);
         if (person.isPresent()) {
             Hibernate.initialize(person.get().getBooks());
+
+            person.get().getBooks().forEach(book -> {
+                long diffInMillies = Math.abs(book.getTakenAt().getTime() - new Date().getTime());
+            if (diffInMillies > 864000000)
+                book.setExpired(true);
+            });
             return person.get().getBooks();
         } else {
             return Collections.emptyList();

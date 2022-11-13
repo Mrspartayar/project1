@@ -7,7 +7,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import yar.lavr.models.Person;
-import yar.lavr.models.Book;
 import yar.lavr.services.BooksService;
 import yar.lavr.services.PeopleService;
 

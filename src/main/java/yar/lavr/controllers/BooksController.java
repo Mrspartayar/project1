@@ -18,6 +18,7 @@ import java.util.Optional;
 public class BooksController {
     private final BooksService booksService;
     private final PeopleService peopleService;
+
     @Autowired
     public BooksController(BooksService booksService, PeopleService peopleService) {
         this.booksService = booksService;
@@ -26,8 +27,13 @@ public class BooksController {
 
 
     @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("books", booksService.findAll());
+    public String index(Model model, @RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "books_per_page", required = false) Integer booksPerPage,
+                        @RequestParam(value = "sort_by_year", required = false) boolean sortByYear) {
+        if (page == null || booksPerPage == null)
+            model.addAttribute("books", booksService.findAll(sortByYear));
+        else
+            model.addAttribute("books", booksService.findWithPagination(page, booksPerPage, sortByYear));
         return "books/index";
     }
 
@@ -35,9 +41,9 @@ public class BooksController {
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         model.addAttribute("book", booksService.findOne(id));
 
-       Person bookOwner = booksService.getBookOwner(id);
+        Person bookOwner = booksService.getBookOwner(id);
 
-        if (bookOwner!=null)
+        if (bookOwner != null)
             model.addAttribute("owner", bookOwner);
         else
             model.addAttribute("people", peopleService.findAll());
