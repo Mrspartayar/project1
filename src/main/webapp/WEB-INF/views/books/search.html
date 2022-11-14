@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Search</title>
@@ -13,16 +13,24 @@
     <input type="submit" value="Search!"/>
 </form>
 
+
 <div th:if="${books}">
     <div th:if="${books.isEmpty()}">
         <span>Books not found</span>
     </div>
-
-    <div th:each="book : ${books}">
-        <p th:text="${book.getTitle()}"></p>
+    <div th:each="book:${books}">
 
 
+        <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYearOfPublic()}">book</p>
 
-
+        <div th:if="${book.getOwner() != null}">
+            <span>Book at: </span> <span th:text="${book.getOwner().getName()}">Person name</span>
+        </div>
+        <div th:if="${book.getOwner() == null}">
+            <span>Book is free</span>
+        </div>
+        <hr/>
+    </div>
+</div>
 </body>
 </html>

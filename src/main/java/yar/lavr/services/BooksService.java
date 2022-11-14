@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import yar.lavr.models.Book;
 import yar.lavr.models.Person;
 import yar.lavr.repositories.BooksRepository;
-import yar.lavr.repositories.PeopleRepository;
 
 import java.util.Date;
 import java.util.List;

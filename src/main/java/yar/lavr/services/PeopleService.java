@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yar.lavr.models.Book;
 import yar.lavr.models.Person;
-import yar.lavr.repositories.BooksRepository;
 import yar.lavr.repositories.PeopleRepository;
 
 import java.util.Collections;
@@ -44,6 +43,7 @@ public class PeopleService {
         updatedPerson.setId(id);
         peopleRepository.save(updatedPerson);
     }
+
     @Transactional
     public void delete(int id) {
         peopleRepository.deleteById(id);
@@ -60,8 +60,8 @@ public class PeopleService {
 
             person.get().getBooks().forEach(book -> {
                 long diffInMillies = Math.abs(book.getTakenAt().getTime() - new Date().getTime());
-            if (diffInMillies > 864000000)
-                book.setExpired(true);
+                if (diffInMillies > 864000000)
+                    book.setExpired(true);
             });
             return person.get().getBooks();
         } else {

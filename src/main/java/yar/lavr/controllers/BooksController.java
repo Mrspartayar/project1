@@ -11,7 +11,7 @@ import yar.lavr.services.BooksService;
 import yar.lavr.services.PeopleService;
 
 import javax.validation.Valid;
-import java.util.Optional;
+
 
 @Controller
 @RequestMapping("/books")
