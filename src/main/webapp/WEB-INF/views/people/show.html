@@ -16,8 +16,16 @@
     <b>Books</b>
     <br/>
     <table th:each="book : ${books}">
-        <tr th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYearOfPublic()}">book</tr>
+        <tr>
+            <td>
+        <span th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYearOfPublic()}"
+              th:style="${book.isExpired()} ? 'color: red' : 'color: black'">
+          book
+        </span>
+            </td>
+        </tr>
     </table>
+    </hr>
 </div>
 
 <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
